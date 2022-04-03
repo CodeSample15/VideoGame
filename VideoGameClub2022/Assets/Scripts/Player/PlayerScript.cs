@@ -61,6 +61,8 @@ public class PlayerScript : MonoBehaviour
 
         //handle camera position
         updateCamera();
+        //For object interaction
+        objectInteraction();
     }
 
     private void updateCamera()
@@ -70,7 +72,7 @@ public class PlayerScript : MonoBehaviour
         {
             //if the player is moving, bob the camera
             movementTimer += Time.deltaTime; //update movement based off of time
-            Debug.Log(Mathf.Sin(movementTimer));
+            //Debug.Log(Mathf.Sin(movementTimer));
             headBobY = Mathf.Sin(movementTimer) * headBobIntensityY;
         }
         else
@@ -99,5 +101,23 @@ public class PlayerScript : MonoBehaviour
         Vector3 targetVel = (transform.forward * MovementSpeed * zInput) + (transform.right * MovementSpeed * xInput);
         rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref velocity, .02f);
         transform.eulerAngles = new Vector3(0, camY, 0);
+    }
+
+    void objectInteraction()
+    {
+        RaycastHit interact;
+        Physics.Raycast(camera.transform.position, camera.transform.forward, out interact, 3);    //3 is how far the player can interact with objects
+        
+        //If the ray doesn't hit anything, just leave this function
+        if (interact.distance == 0) 
+        {
+            return;
+        }
+
+        //If it detects an Interaction object, display something that indicates it's an object and allow you to interact
+        if (interact.transform.tag == "Interaction")
+        {
+            Debug.DrawRay(camera.transform.position, camera.transform.forward * 3, Color.yellow);
+        }
     }
 }
