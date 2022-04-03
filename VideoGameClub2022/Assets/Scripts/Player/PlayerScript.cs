@@ -103,21 +103,36 @@ public class PlayerScript : MonoBehaviour
         transform.eulerAngles = new Vector3(0, camY, 0);
     }
 
-    void objectInteraction()
+    private bool Key;
+    private GameObject hitObject;
+    void objectInteraction()        //Point of this function is to put a highlight around object that you can interact with, and allow interactions
     {
+
         RaycastHit interact;
         Physics.Raycast(camera.transform.position, camera.transform.forward, out interact, 3);    //3 is how far the player can interact with objects
         
-        //If the ray doesn't hit anything, just leave this function
-        if (interact.distance == 0) 
+
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out interact, 3))  // if Raycast hits something
         {
-            return;
+            if (interact.collider.tag == "Interaction") //If the object is tagged as an interaction object
+            {
+                hitObject = interact.collider.gameObject;    
+                hitObject.GetComponent<MeshRenderer>().material.color = Color.white;    //Sets the color of object to white, (later change this to a highlight around object)
+                Key = true;
+            }
+            else //Any other object
+            {
+                hitObject.GetComponent<MeshRenderer>().material.color = Color.grey; //Return to original color (with the highlights, just disable the highlight)
+                Key = false;
+            }
+        }
+        else if (Key == true)   //If not hitting anything, return to normal color
+        {
+            hitObject.GetComponent<MeshRenderer>().material.color = Color.grey; //Return to original color (with the highlights, just disable the highlight)
+            Key = false;
         }
 
-        //If it detects an Interaction object, display something that indicates it's an object and allow you to interact
-        if (interact.transform.tag == "Interaction")
-        {
-            Debug.DrawRay(camera.transform.position, camera.transform.forward * 3, Color.yellow);
-        }
+        //IMPLEMENT ACTUAL INTERACTIONS
+
     }
 }
