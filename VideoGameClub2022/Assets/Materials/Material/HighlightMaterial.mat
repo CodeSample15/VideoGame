@@ -118,6 +118,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _rimPower: 2
+    - _transparency: 0
     m_Colors:
     - Color_03921eb4dcc0461695d9c2eca2fc7239: {r: 0, g: 0, b: 0, a: 0}
     - Color_598b5962e55c45ca891fa37faca95ebf: {r: 1, g: 1, b: 1, a: 0}
