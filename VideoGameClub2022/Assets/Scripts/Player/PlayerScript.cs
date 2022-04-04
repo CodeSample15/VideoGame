@@ -5,21 +5,26 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Camera Settings")]
     [SerializeField] private GameObject camera;
+    [Tooltip("How far away the camera is from the center of the bean collider on the Y axis")]
+    [SerializeField] private float cameraYOffset;
     [Tooltip("How much the player's head bobs when moving")]
     [SerializeField] private float headBobIntensityX;
     [Tooltip("How much the player's head bobs when moving")]
     [SerializeField] private float headBobIntensityY;
+    [Tooltip("How fast the player's head bobs")]
+    [SerializeField] private float headBobSpeed;
 
     [Space]
 
+    [Header("Walking Settings")]
     [Tooltip("How fast the player moves")]
     [SerializeField] private float MovementSpeed;
-    [Tooltip("How far away the camera is from the center of the bean collider on the Y axis")]
-    [SerializeField] private float cameraYOffset;
 
     [Space]
 
+    [Header("Mouse Settings")]
     [Range(1f, 10f)]
     [SerializeField] private float MouseSensitivity = 5;
 
@@ -65,14 +70,21 @@ public class PlayerScript : MonoBehaviour
         objectInteraction();
     }
 
+    void FixedUpdate()
+    {
+        //move the player
+        Vector3 targetVel = (transform.forward * MovementSpeed * zInput) + (transform.right * MovementSpeed * xInput);
+        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref velocity, .02f);
+        transform.eulerAngles = new Vector3(0, camY, 0);
+    }
+
     private void updateCamera()
     {
         //calculate head bobbing
-        if (xInput != 0 || zInput != 0)
+        if (xInput != 0 || zInput != 0) //if the player is moving
         {
             //if the player is moving, bob the camera
-            movementTimer += Time.deltaTime; //update movement based off of time
-            //Debug.Log(Mathf.Sin(movementTimer));
+            movementTimer += Time.deltaTime * headBobSpeed; //update movement based off of time
             headBobY = Mathf.Sin(movementTimer) * headBobIntensityY;
         }
         else
@@ -89,19 +101,6 @@ public class PlayerScript : MonoBehaviour
         camera.transform.localPosition = new Vector3(cameraPos.x, cameraPos.y + headBobY, cameraPos.z);
     }
 
-    void FixedUpdate()
-    {
-        //move the player + camera
-
-        //put the camera code in FixedUpdate to prevent moving the camera multiple times per loop in LateUpdate
-        //safer to put in LateUpdate if the movement code is put somewhere else other than the same FixedUpdate loop
-        //I'm putting it in FixedUpdate anyway since I can control when the camera position is updated and it will
-        //save a little bit of processing time (not a lot, but idk it might come in handy later)
-
-        Vector3 targetVel = (transform.forward * MovementSpeed * zInput) + (transform.right * MovementSpeed * xInput);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref velocity, .02f);
-        transform.eulerAngles = new Vector3(0, camY, 0);
-    }
 
     private bool Key;
     private GameObject hitObject;
@@ -122,7 +121,12 @@ public class PlayerScript : MonoBehaviour
             }
             else //Any other object
             {
-                hitObject.GetComponent<MeshRenderer>().material.color = Color.grey; //Return to original color (with the highlights, just disable the highlight)
+                /*
+                 * hitObject is never initialized here, likely to cause errors.
+                 * also we need to swap out the color changing with a shader to make it easier to use with other objects
+                 */
+
+                //hitObject.GetComponent<MeshRenderer>().material.color = Color.grey; //Return to original color (with the highlights, just disable the highlight)
                 Key = false;
             }
         }
