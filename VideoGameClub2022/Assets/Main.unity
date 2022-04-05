@@ -986,7 +986,6 @@ MonoBehaviour:
   headBobSpeed: 1.39
   MovementSpeed: 4
   MouseSensitivity: 2.97
-  originalMaterial: {fileID: 2100000, guid: 25a9fb42d361f46ad89221f6d301e96e, type: 2}
   highlightShader: {fileID: 2100000, guid: 4a4a73a74bea09b4ca7fb69b714c34c8, type: 2}
 --- !u!1 &854681399
 GameObject:
@@ -1039,6 +1038,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 2100000, guid: 25a9fb42d361f46ad89221f6d301e96e, type: 2}
   - {fileID: 2100000, guid: 25a9fb42d361f46ad89221f6d301e96e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1134,6 +1134,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 2100000, guid: 25a9fb42d361f46ad89221f6d301e96e, type: 2}
   - {fileID: 2100000, guid: 25a9fb42d361f46ad89221f6d301e96e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

@@ -105,40 +105,35 @@ public class PlayerScript : MonoBehaviour
     private bool Key;
     private GameObject hitObject;
     [SerializeField]
-    private Material originalMaterial;
-    [SerializeField]
     private Material highlightShader;
     void objectInteraction()        //Point of this function is to put a highlight around object that you can interact with, and allow interactions
     {
-
         RaycastHit interact;
-        Physics.Raycast(camera.transform.position, camera.transform.forward, out interact, 3);    //3 is how far the player can interact with objects
 
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out interact, 3))  // if Raycast hits something
         {
             if (interact.collider.tag == "Interaction") //If the object is tagged as an interaction object
             {
-                /*
-                 * Implement later, instead of replacing the material, instead add another element in the material array
-                 */
-                hitObject = interact.collider.gameObject;
-                hitObject.GetComponent<MeshRenderer>().material = highlightShader;    //Sets the color of object to white, (later change this to a highlight around object)
+                
+                hitObject = interact.collider.gameObject;   
+
+                //Switches element 1 in the material array with a highlight
+                Material[] change = hitObject.GetComponent<MeshRenderer>().materials;
+                change[1] = highlightShader;
+                hitObject.GetComponent<MeshRenderer>().materials = change;
+
                 Key = true;
             }
             else //Any other object
-            {
-                /*
-                 * hitObject is never initialized here, likely to cause errors.
-                 * also we need to swap out the color changing with a shader to make it easier to use with other objects
-                 */
-
-                //hitObject.GetComponent<MeshRenderer>().material.color = Color.grey; //Return to original color (with the highlights, just disable the highlight)
+            {   
                 Key = false;
             }
         }
-        else if (Key == true)   //If not hitting anything, return to normal color
+        else if (Key == true)   //If not hitting anything, switches second element to equal the first
         {
-            hitObject.GetComponent<MeshRenderer>().material = originalMaterial; //Return to original color (with the highlights, just disable the highlight)
+            Material[] change = hitObject.GetComponent<MeshRenderer>().materials;
+            change[1] = change[0];
+            hitObject.GetComponent<MeshRenderer>().materials = change;
             Key = false;
         }
 
