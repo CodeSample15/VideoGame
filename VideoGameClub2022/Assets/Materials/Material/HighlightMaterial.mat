@@ -117,12 +117,13 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _rimPower: 2
+    - _rimPower: 1.22
     - _transparency: 0
     m_Colors:
     - Color_03921eb4dcc0461695d9c2eca2fc7239: {r: 0, g: 0, b: 0, a: 0}
     - Color_598b5962e55c45ca891fa37faca95ebf: {r: 1, g: 1, b: 1, a: 0}
     - Color_87808112b8d94e1783c55270a544a3f1: {r: 1, g: 1, b: 1, a: 0}
+    - Color_8ce9c095b6944de5b5503e66b1c6ef45: {r: 0.20942406, g: 3.769633, b: 7.999999, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
