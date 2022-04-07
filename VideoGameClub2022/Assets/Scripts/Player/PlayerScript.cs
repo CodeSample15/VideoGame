@@ -85,6 +85,7 @@ public class PlayerScript : MonoBehaviour
         {
             //if the player is moving, bob the camera
             movementTimer += Time.deltaTime * headBobSpeed; //update movement based off of time
+            Debug.Log(movementTimer);
             headBobY = Mathf.Sin(movementTimer) * headBobIntensityY;
         }
         else
@@ -92,7 +93,7 @@ public class PlayerScript : MonoBehaviour
             headBobY = 0;
             movementTimer = 0;
         }
-
+        //Debug.Log(headBobY);
         camera.transform.position = new Vector3(transform.position.x, transform.position.y + cameraYOffset, transform.position.z);
         camera.transform.eulerAngles = new Vector3(camX, camY, 0);
 
