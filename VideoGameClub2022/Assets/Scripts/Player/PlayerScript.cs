@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerScript : MonoBehaviour
@@ -10,17 +11,19 @@ public class PlayerScript : MonoBehaviour
     [Tooltip("How far away the camera is from the center of the bean collider on the Y axis")]
     [SerializeField] private float cameraYOffset;
     [Tooltip("How much the player's head bobs when moving")]
-    [SerializeField] private float headBobIntensityX;
-    [Tooltip("How much the player's head bobs when moving")]
     [SerializeField] private float headBobIntensityY;
     [Tooltip("How fast the player's head bobs")]
     [SerializeField] private float headBobSpeed;
+    [Tooltip("How fast the player's head returns to normal position when not moving")]
+    [SerializeField] private float headReturnSpeed = 1.5f;
 
     [Space]
 
     [Header("Walking Settings")]
     [Tooltip("How fast the player moves")]
     [SerializeField] private float MovementSpeed;
+    [Tooltip("How fast the player changes velocity")]
+    [SerializeField] private float MovementImpulseSpeed = .02f;
 
     [Space]
 
@@ -36,14 +39,18 @@ public class PlayerScript : MonoBehaviour
     private float camX = 0; //location of mouse used to move camera
     private float camY = 0;
 
-    //offset variables for the camera when 
-    private float headBobX;
+    //offset variables for the camera when moving for head-bobbing effect
     private float headBobY;
     private float movementTimer; //used to calculate the sin waves of the head bobbing
+    private float headVelocity; //for moving the player head back into place when not moving
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        headBobY = 0;
+        movementTimer = 0;
+        headVelocity = 0;
     }
 
     void Update()
@@ -54,10 +61,6 @@ public class PlayerScript : MonoBehaviour
 
         camX -= Input.GetAxis("Mouse Y") * MouseSensitivity;
         camY += Input.GetAxis("Mouse X") * MouseSensitivity;
-
-        headBobX = 0;
-        headBobY = 0;
-        movementTimer = 0;
 
         if (camX > 90)
             camX = 90;
@@ -74,7 +77,7 @@ public class PlayerScript : MonoBehaviour
     {
         //move the player
         Vector3 targetVel = (transform.forward * MovementSpeed * zInput) + (transform.right * MovementSpeed * xInput);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref velocity, .02f);
+        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref velocity, MovementImpulseSpeed);
         transform.eulerAngles = new Vector3(0, camY, 0);
     }
 
@@ -85,21 +88,17 @@ public class PlayerScript : MonoBehaviour
         {
             //if the player is moving, bob the camera
             movementTimer += Time.deltaTime * headBobSpeed; //update movement based off of time
-            Debug.Log(movementTimer);
             headBobY = Mathf.Sin(movementTimer) * headBobIntensityY;
         }
         else
         {
-            headBobY = 0;
+            headBobY = Mathf.SmoothDamp(headBobY, 0, ref headVelocity, headReturnSpeed);
+
             movementTimer = 0;
         }
-        //Debug.Log(headBobY);
-        camera.transform.position = new Vector3(transform.position.x, transform.position.y + cameraYOffset, transform.position.z);
-        camera.transform.eulerAngles = new Vector3(camX, camY, 0);
 
-        //head bobbing
-        Vector3 cameraPos = camera.transform.localPosition;
-        camera.transform.localPosition = new Vector3(cameraPos.x, cameraPos.y + headBobY, cameraPos.z);
+        camera.transform.position = new Vector3(transform.position.x, transform.position.y + cameraYOffset + headBobY, transform.position.z);
+        camera.transform.eulerAngles = new Vector3(camX, camY, 0);
     }
 
 
