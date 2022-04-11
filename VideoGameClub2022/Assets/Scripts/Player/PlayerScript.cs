@@ -140,4 +140,24 @@ public class PlayerScript : MonoBehaviour
         //IMPLEMENT ACTUAL INTERACTIONS
 
     }
+    void OnCollisionEnter(Collision col)
+    { 
+        /*
+         * Stairs are currently just an invisible ramp above the actual stairs, 
+         * this is because programming stairs is hard and this is an easy fix.
+         * However, character moves slower when going up a ramp, so increase
+         * player's speed a bit when going up stairs
+         */
+
+        if (col.gameObject.tag.Equals("Stairs")){
+            MovementSpeed *= 1.5f;
+        } 
+    }
+    void OnCollisionExit(Collision col)
+    {
+        if (col.gameObject.tag.Equals("Stairs"))
+        {
+            MovementSpeed /= 1.5f;
+        }
+    }
 }
