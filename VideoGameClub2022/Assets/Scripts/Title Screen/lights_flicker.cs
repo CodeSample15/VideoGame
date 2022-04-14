@@ -19,11 +19,24 @@ public class lights_flicker : MonoBehaviour
     {
         isFlickering = true;
         this.gameObject.GetComponent<Light>().enabled = false;
-        timeDelay = Random.Range(0.05f, 0.3f);
+        timeDelay = Random.Range(0.1f, 0.3f);
         yield return new WaitForSeconds(timeDelay);
+
+        if (timeDelay >= 0.25f)
+        {
+            yield return new WaitForSeconds(0.6f);
+        }
+
+        this.gameObject.GetComponent<Light>().intensity = Random.Range(50f, 300f);
         this.gameObject.GetComponent<Light>().enabled = true;
-        timeDelay = Random.Range(0.05f, 0.3f);
+        timeDelay = Random.Range(0.1f, 0.3f);
         yield return new WaitForSeconds(timeDelay);
+
+        if (timeDelay >= 0.25f)
+        {
+            yield return new WaitForSeconds(0.6f);
+        }
+        
         isFlickering = false;
     }
 }
