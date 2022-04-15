@@ -67,6 +67,13 @@ public class PlayerScript : MonoBehaviour
         else if (camX < -90)
             camX = -90;
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //Actually pause everything
+            Debug.Log("Game Paused");
+            GameObject.Find("Pause").GetComponent<Canvas>().enabled = true;
+        }
+
         //handle camera position
         updateCamera();
         //For object interaction
@@ -122,6 +129,12 @@ public class PlayerScript : MonoBehaviour
                 change[1] = highlightShader;
                 hitObject.GetComponent<MeshRenderer>().materials = change;
 
+                //Enable interaction Option on Interaction Script
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    hitObject.GetComponent<InteractionScript>().interactOption();
+                }
+
                 Key = true;
             }
             else //Any other object
@@ -137,7 +150,9 @@ public class PlayerScript : MonoBehaviour
             Key = false;
         }
 
-        //IMPLEMENT ACTUAL INTERACTIONS
+        //Actual Interactions
+
+        
 
     }
     void OnCollisionEnter(Collision col)
